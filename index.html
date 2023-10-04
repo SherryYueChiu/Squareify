@@ -30,7 +30,7 @@
 
 <body>
   <label class="custom-file-input" for="fileInput">1. 按這上傳</label>
-  <input type="file" id="fileInput" accept="image/*,video/*" />
+  <input type="file" id="fileInput" accept="image/*" />
   <div class="media-container">
     <img id="uploadedImage" alt="還沒上傳">
     <video id="uploadedVideo" controls autoplay muted loop style="display: none;">
@@ -43,6 +43,10 @@
     <p class="slideShine">玥餅</p>
   </div>
 
+  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.9.5/dist/ffmpeg.min.js"></script>
+<script>
+  const { createFFmpeg } = FFmpeg;
+</script>
   <script src="script.js"></script>
 </body>
 
