@@ -10,8 +10,8 @@ body {
 
 /* 垂直居中的样式应用于 .media-container */
 .media-container {
-  width: 300px;
-  height: 300px;
+  width: 360px;
+  height: 360px;
   margin: 20px auto;
   border: 2px solid #786c5a;
   border-radius: 10px;
@@ -24,13 +24,11 @@ body {
 }
 
 
-img, video {
-  max-width: 100%;
-  max-height: 100%;
+.media-container>canvas {
+  width: 1080px;
+  height: 1080px;
+  transform: scale(0.3333);
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
 .button-container {
@@ -112,5 +110,4 @@ input[type="file"] {
   100% {
       background-position: 150% 100%;
   }
-}
 }

@@ -16,8 +16,8 @@ fileInput.addEventListener('change', function () {
             img.onload = function () {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
-                const maxSize = 300; // 正方形的尺寸
-                const padding = 15; // 5% 的内边距
+                const maxSize = 1080; // 正方形的尺寸
+                const padding = 54; // 5% 的内边距
 
                 let width, height;
 
@@ -31,8 +31,8 @@ fileInput.addEventListener('change', function () {
                     width = (img.width / img.height) * height;
                 }
 
-                canvas.width = maxSize+2*padding; // 设置正方形的尺寸
-                canvas.height = maxSize+2*padding;
+                canvas.width = maxSize + 2 * padding; // 设置正方形的尺寸
+                canvas.height = maxSize + 2 * padding;
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -46,13 +46,6 @@ fileInput.addEventListener('change', function () {
         };
         reader.readAsDataURL(file);
     } else if (file.type.startsWith('video')) {
-        const videoSource = URL.createObjectURL(file);
-        const video = document.createElement('video');
-        video.src = videoSource;
-        video.controls = true;
-        video.style.maxWidth = '100%'; // 视频的最大宽度为100%
-        mediaContainer.appendChild(video);
-        downloadButton.disabled = false;
     }
 });
 
@@ -60,15 +53,41 @@ downloadButton.addEventListener('click', function () {
     const media = mediaContainer.firstChild; // 获取 mediaContainer 的第一个子元素（Canvas 或视频）
     if (media) {
         if (media instanceof HTMLCanvasElement) {
-            const link = document.createElement('a');
-            link.href = media.toDataURL('image/png');
-            link.download = 'output_image.png';
-            link.click();
+            const dataURL = media.toDataURL('image/png');
+            if (navigator.userAgent.indexOf('Safari') !== -1 && navigator.userAgent.indexOf('Chrome') === -1) {
+                downloadInSafari(dataURL, 'output_image.png');
+            } else {
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'output_image.png';
+                link.click();
+            }
         } else if (media instanceof HTMLVideoElement) {
             const link = document.createElement('a');
             link.href = media.src;
             link.download = 'video.mp4';
             link.click();
         }
+    }
+});
+
+function downloadInSafari(dataURL, filename) {
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    // link.download  = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const downloadButton = document.getElementById('downloadButton');
+    
+    if (isSafari) {
+        downloadButton.innerText = "2. 前往長按儲存";
     }
 });
