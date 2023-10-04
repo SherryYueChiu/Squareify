@@ -1,14 +1,13 @@
 const fileInput = document.getElementById('fileInput');
-const uploadedImage = document.getElementById('uploadedImage');
+const mediaContainer = document.querySelector('.media-container');
 const downloadButton = document.getElementById('downloadButton');
 
 fileInput.addEventListener('change', function () {
-    uploadedImage.style.display = 'none';
-    uploadedVideo.style.display = 'none';
+    mediaContainer.innerHTML = ''; // 清空 mediaContainer 的内容
     downloadButton.disabled = true;
 
     const file = fileInput.files[0];
-    if (file && file.type.startsWith('image')) { // 仅处理图像文件
+    if (file.type.startsWith('image')) {
         const reader = new FileReader();
         reader.onload = function (e) {
             const img = new Image();
@@ -17,59 +16,59 @@ fileInput.addEventListener('change', function () {
             img.onload = function () {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
+                const maxSize = 300; // 正方形的尺寸
+                const padding = 15; // 5% 的内边距
+
                 let width, height;
 
-                // 确保图像不超过指定的最大宽度和高度
-                const maxWidth = 300; // 最大宽度
-                const maxHeight = 300; // 最大高度
-
-                if (img.width > maxWidth || img.height > maxHeight) {
-                    // 计算适当的缩放比例
-                    const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
-                    width = Math.floor(img.width * scale);
-                    height = Math.floor(img.height * scale);
+                if (img.width >= img.height) {
+                    // 图片宽度较大，根据宽度进行缩放
+                    width = maxSize - 2 * padding;
+                    height = (img.height / img.width) * width;
                 } else {
-                    // 如果图像本身就小于指定的尺寸，则保持原始尺寸
-                    width = img.width;
-                    height = img.height;
+                    // 图片高度较大，根据高度进行缩放
+                    height = maxSize - 2 * padding;
+                    width = (img.width / img.height) * height;
                 }
 
-                canvas.width = 300; // 设置正方形的尺寸
-                canvas.height = 300;
+                canvas.width = maxSize+2*padding; // 设置正方形的尺寸
+                canvas.height = maxSize+2*padding;
                 ctx.fillStyle = 'white';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                const x = (canvas.width - width) / 2;
-                const y = (canvas.height - height) / 2;
+                const x = (maxSize - width) / 2 + padding;
+                const y = (maxSize - height) / 2 + padding;
                 ctx.drawImage(img, x, y, width, height);
 
-                uploadedImage.src = canvas.toDataURL('image/png');
-                uploadedImage.style.display = 'block'; // 确保图像可见
+                mediaContainer.appendChild(canvas);
                 downloadButton.disabled = false;
             };
         };
         reader.readAsDataURL(file);
-    } else if (file.type.startsWith('video')) { // 处理视频文件
+    } else if (file.type.startsWith('video')) {
         const videoSource = URL.createObjectURL(file);
-        uploadedImage.style.display = 'none';
-        uploadedVideo.style.display = 'block';
-        uploadedVideo.src = videoSource;
+        const video = document.createElement('video');
+        video.src = videoSource;
+        video.controls = true;
+        video.style.maxWidth = '100%'; // 视频的最大宽度为100%
+        mediaContainer.appendChild(video);
         downloadButton.disabled = false;
     }
 });
 
-
 downloadButton.addEventListener('click', function () {
-    if (uploadedVideo.style.display === 'block') {
-        const blobUrl = uploadedVideo.src;
-        const link = document.createElement('a');
-        link.href = blobUrl;
-        link.download = 'video.mp4'; // 设置下载的文件名
-        link.click();
-    } else if (uploadedImage.style.display === 'block') {
-        const link = document.createElement('a');
-        link.download = 'output_image.png';
-        link.href = uploadedImage.src;
-        link.click();
+    const media = mediaContainer.firstChild; // 获取 mediaContainer 的第一个子元素（Canvas 或视频）
+    if (media) {
+        if (media instanceof HTMLCanvasElement) {
+            const link = document.createElement('a');
+            link.href = media.toDataURL('image/png');
+            link.download = 'output_image.png';
+            link.click();
+        } else if (media instanceof HTMLVideoElement) {
+            const link = document.createElement('a');
+            link.href = media.src;
+            link.download = 'video.mp4';
+            link.click();
+        }
     }
 });
