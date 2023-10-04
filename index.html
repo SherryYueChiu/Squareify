@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Squareify</title>
+  <meta name="description" content="把照片和影片變成正方形的。">
+  <meta name="keywords" content="Squareify, 圖片處理, 影片處理, 顯示工具">
+  <meta name="author" content="玥餅">
+  <link rel="icon" href="favicon.ico"> <!-- 替换为您的网站图标的URL -->
+
+  <!-- 添加其他元信息和链接 -->
+  <!-- 例如，添加社交分享时需要的Open Graph和Twitter卡片标签 -->
+  <!-- 替换以下内容为您的信息 -->
+  <meta property="og:url" content="https://sherryyuechiu.github.io/Squareify">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Squareify">
+  <meta property="og:description" content="把照片和影片變成正方形的。">
+  <!-- <meta property="og:image" content="sherryyuechiu.github.io/Squareify/og-image.jpg"> -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@SherryYueChiu">
+  <meta name="twitter:title" content="Squareify">
+  <meta name="twitter:description" content="把照片和影片變成正方形的。">
+  <!-- <meta name="twitter:image" content="https://您的网站URL.com/twitter-image.jpg"> -->
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+
+<body>
+  <label class="custom-file-input" for="fileInput">1. 按這上傳</label>
+  <input type="file" id="fileInput" accept="image/*,video/*" />
+  <div class="media-container">
+    <img id="uploadedImage" alt="還沒上傳">
+    <video id="uploadedVideo" controls autoplay muted loop style="display: none;">
+    </video>
+  </div>
+  <div class="button-container">
+    <button id="downloadButton" disabled>2. 按這下載</button>
+  </div>
+  <div class="bg">
+    <p class="slideShine">玥餅</p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
